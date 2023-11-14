@@ -32,6 +32,7 @@ THIRD_PARTY_APPS = [
 CUSTOM_APPS = [
     "users.apps.UsersConfig",
     "payments.apps.PaymentsConfig",
+    "plans.apps.PlansConfig",
 ]
 
 SYSTEM_APPS = [
