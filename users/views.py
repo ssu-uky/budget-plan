@@ -90,20 +90,20 @@ class LogoutView(APIView):
     """
     POST : 로그아웃
     """
-    
+
     permission_classes = [IsAuthenticated]
-    
+
     def get(self, request):
         return Response({"message": "로그아웃 하시겠습니까?"})
-    
+
     def post(self, request):
         # 쿠키에서 access_token 삭제
         response = Response({"message": "로그아웃 되었습니다."}, status=status.HTTP_200_OK)
         response.delete_cookie("access_token")
-        
+
         # 세션에서 refresh_token 가져오기
         refresh_token = request.session.get("refresh_token")
-        
+
         if refresh_token:
             try:
                 token = RefreshToken(refresh_token)
@@ -111,8 +111,8 @@ class LogoutView(APIView):
                 del request.session["refresh_token"]
             except Exception as e:
                 print(e)
-                
+
             return response
-        
+
         logout(request)
         return response
