@@ -2,6 +2,10 @@ from django.db import models
 
 
 class Payment(models.Model):
+    """
+    지출 내역 모델
+    """
+
     class PayChoices(models.TextChoices):
         FOOD = "Food", "식비"
         CAFE = "Cafe", "카페"
