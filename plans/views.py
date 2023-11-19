@@ -15,7 +15,6 @@ class MonthlyPlanView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        # return Response({"message": "예산 계획을 입력해주세요."})
         return Response(
             {
                 "message": "예산 계획을 입력해주세요.",

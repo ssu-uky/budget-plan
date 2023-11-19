@@ -7,6 +7,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 
 from .serializers import SignupSerializer, LoginSerializer
+from plans.models import BudgetPlan
+from plans.views import MonthlyPlanView
 
 
 class SignUpView(APIView):
@@ -116,3 +118,30 @@ class LogoutView(APIView):
 
         logout(request)
         return response
+
+
+class MyPageView(APIView):
+    """
+    GET : 마이페이지(한달 예산 계획 / 한달 지출 금액 / 일일 예산 / 일일 지출 금액)
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            monthly_plan = BudgetPlan.objects.get(owner=request.user)
+        except BudgetPlan.DoesNotExist:
+            return Response(
+                {"message": "월별 예산 계획이 없습니다."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        return Response(
+            {
+                "monthly_income": monthly_plan.monthly_income,
+                "monthly_saving": monthly_plan.monthly_saving,
+                "monthly_plan": monthly_plan.monthly_plan,
+                # "monthly_spending": monthly_spending,
+                # "daily_plan": daily_plan,
+                # "daily_spending": daily_spending,
+            }
+        )

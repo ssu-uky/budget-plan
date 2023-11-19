@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class Payment(models.Model):
@@ -47,8 +48,10 @@ class Payment(models.Model):
         blank=False,
     )
 
-    pay_date = models.DateTimeField(
-        blank=False,
+    pay_date = models.DateField(
+        default=timezone.now,
+        blank=True,
+        null=True,
     )
 
     def __str__(self):

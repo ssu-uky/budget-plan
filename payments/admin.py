@@ -5,7 +5,7 @@ from .models import Payment
 @admin.register(Payment)
 class PaymentsAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
+        # "id",
         "owner",
         "pay_type",
         "pay_title",
@@ -14,7 +14,7 @@ class PaymentsAdmin(admin.ModelAdmin):
         "pay_date",
     )
     list_display_links = (
-        "id",
+        # "id",
         "owner",
         "pay_type",
         "pay_title",

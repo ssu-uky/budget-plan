@@ -1,14 +1,16 @@
+from django.utils import timezone
+
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, ParseError
 
 from .models import Payment
 
 
-class PaymentsSerializer(serializers.ModelSerializer):
+class PaymentSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source="owner.username")
 
     class Meta:
-        models = Payment
+        model = Payment
         fields = [
             "owner",
             "pay_type",
@@ -17,3 +19,5 @@ class PaymentsSerializer(serializers.ModelSerializer):
             "pay_price",
             "pay_date",
         ]
+
+        read_only_fields = ["owner"]
