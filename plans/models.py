@@ -23,7 +23,8 @@ class BudgetPlan(models.Model):
 
     # 한달 예상 지출 금액
     monthly_plan = models.PositiveIntegerField(
-        blank=False,
+        blank=True,
+        null=True,
     )
 
     # 한달 저축 금액
@@ -41,6 +42,7 @@ class BudgetPlan(models.Model):
     # 일일 예상 지출 금액
     daily_plan = models.PositiveIntegerField(
         blank=True,
+        null=True,
     )
 
     def __str__(self):
