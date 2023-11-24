@@ -31,7 +31,8 @@ class MonthlyPlanSerializer(serializers.ModelSerializer):
 class BudgetPlanSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source="owner.username")
     monthly_plan = serializers.SerializerMethodField()
-    daily_spending = serializers.SerializerMethodField()
+    daily_spending = serializers.ReadOnlyField(source="daily_spending.pay_price")
+    daily_plan = serializers.ReadOnlyField(source="daily_plan")
 
     class Meta:
         model = BudgetPlan
@@ -49,3 +50,4 @@ class BudgetPlanSerializer(serializers.ModelSerializer):
 
     def get_monthly_plan(self, obj):
         return obj.monthly_income - obj.monthly_saving
+    

@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, ParseError
 
 from .models import Payment
+from plans.models import BudgetPlan
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -11,13 +12,30 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = [
-            "owner",
-            "pay_type",
-            "pay_title",
-            "pay_content",
-            "pay_price",
-            "pay_date",
-        ]
+        fields = "__all__"
 
         read_only_fields = ["owner"]
+
+
+class DailyPaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = "pay_type", "pay_title", "pay_content", "pay_price", "pay_date"
+
+
+class BudgetPlanSerializer(serializers.Serializer):
+    owner = serializers.ReadOnlyField(source="owner.username")
+    monthly_spending = PaymentSerializer(many=True, read_only=True)
+    daily_spending = PaymentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = BudgetPlan
+        fields = [
+            "owner",
+            "monthly_income",
+            "monthly_plan",
+            "monthly_saving",
+            "monthly_spending",
+            "daily_spending",
+            "daily_plan",
+        ]

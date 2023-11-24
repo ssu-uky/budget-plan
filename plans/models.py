@@ -32,10 +32,17 @@ class BudgetPlan(models.Model):
         blank=False,
     )
 
+    # 한달 지출 금액
+    monthly_spending = models.ManyToManyField(
+        Payment,
+        related_name="monthly_budgetplans",
+        blank=True,
+    )
+
     # 일일 지출 금액
     daily_spending = models.ManyToManyField(
         Payment,
-        related_name="budgetplans",
+        related_name="daily_budgetplans",
         blank=True,
     )
 
