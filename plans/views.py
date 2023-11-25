@@ -1,15 +1,18 @@
 import calendar
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import permissions
+from rest_framework.exceptions import NotFound, PermissionDenied, ParseError
 
 from .models import BudgetPlan
 from .serializers import MonthlyPlanSerializer
 
 from payments.models import Payment
+from users.models import User
 
 
 class MonthlyPlanView(APIView):
@@ -104,19 +107,42 @@ class MonthlyPlanView(APIView):
 
 class DailyPlanView(APIView):
     """
-    GET : 일일 지출 현황 조회
+    GET : 일일 지출 현황 조회 (날짜로 조회)
     """
 
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, year=None, month=None, day=None):
+    def get_object(self, owner, year, month, day):
+        user = get_object_or_404(User, username=owner)
+        return get_object_or_404(
+            Payment,
+            owner=user,
+            pay_date__year=year,
+            pay_date__month=month,
+            pay_date__day=day,
+        )
+
+    def get(self, request, owner, year=None, month=None, day=None):
+        if request.user.username != owner:
+            raise PermissionDenied
         try:
             budget_plan = BudgetPlan.objects.get(owner=request.user)
-
+            
             if year and month and day:
-                today_date = timezone.datetime(year, month, day).date()
+                try:
+                    today_date = timezone.datetime(year, month, day).date()
+                except ValueError:
+                    return Response(
+                        {"message": "해당 일을 조회할 수 없습니다."},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
             else:
                 today_date = timezone.now().date()
+
+            # if year and month and day:
+            #     today_date = timezone.datetime(year, month, day).date()
+            # else:
+            #     today_date = timezone.now().date()
 
             # 해당 월의 총 일수와 현재 날짜 구하기
             _, last_day_of_month = calendar.monthrange(
@@ -165,7 +191,7 @@ class DailyPlanView(APIView):
             data = {
                 # "monthly_plan": budget_plan.monthly_plan,
                 "daily_plan": daily_plan,
-                "monthly_amounts" : total_monthly_spending,
+                "monthly_amounts": total_monthly_spending,
                 "today_spending": today_spending,
                 "today_total_spending": today_total_spending,
             }
