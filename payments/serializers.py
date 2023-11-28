@@ -26,7 +26,7 @@ class DailyPaymentSerializer(serializers.ModelSerializer):
 class BudgetPlanSerializer(serializers.Serializer):
     owner = serializers.ReadOnlyField(source="owner.username")
     monthly_spending = PaymentSerializer(many=True, read_only=True)
-    daily_spending = PaymentSerializer(many=True, read_only=True)
+    today_spending = PaymentSerializer(many=True, read_only=True)
 
     class Meta:
         model = BudgetPlan
@@ -36,6 +36,6 @@ class BudgetPlanSerializer(serializers.Serializer):
             "monthly_plan",
             "monthly_saving",
             "monthly_spending",
-            "daily_spending",
-            "daily_plan",
+            "today_spending",
+            "today_plan",
         ]

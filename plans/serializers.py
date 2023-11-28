@@ -21,7 +21,7 @@ class MonthlyPlanSerializer(serializers.ModelSerializer):
         return obj.monthly_income - obj.monthly_saving
 
     read_only_fields = ["owner"]
-    
+
     def validate(self, data):
         if data.get("monthly_saving") > data.get("monthly_income"):
             raise ValidationError("월 저축금액은 월 수입보다 클 수 없습니다.")
@@ -31,8 +31,8 @@ class MonthlyPlanSerializer(serializers.ModelSerializer):
 class BudgetPlanSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source="owner.username")
     monthly_plan = serializers.SerializerMethodField()
-    daily_spending = serializers.ReadOnlyField(source="daily_spending.pay_price")
-    daily_plan = serializers.ReadOnlyField(source="daily_plan")
+    today_spending = serializers.ReadOnlyField(source="today_spending.pay_price")
+    today_plan = serializers.ReadOnlyField(source="today_plan")
 
     class Meta:
         model = BudgetPlan
@@ -41,8 +41,8 @@ class BudgetPlanSerializer(serializers.ModelSerializer):
             "monthly_income",
             "monthly_plan",
             "monthly_saving",
-            "daily_spending",
-            "daily_plan",
+            "today_spending",
+            "today_plan",
         ]
 
     def get_monthly_income(self, obj):
@@ -50,4 +50,3 @@ class BudgetPlanSerializer(serializers.ModelSerializer):
 
     def get_monthly_plan(self, obj):
         return obj.monthly_income - obj.monthly_saving
-    

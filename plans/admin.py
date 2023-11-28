@@ -9,12 +9,12 @@ class BudgetPlanAdmin(admin.ModelAdmin):
         "monthly_income",
         "monthly_plan",
         "monthly_saving",
-        "daily_plan",
+        "today_plan",
     )
     list_display_links = ("owner",)
     search_fields = ("owner__username",)
     list_filter = ("owner",)
-    filter_horizontal = ("daily_spending",)
+    filter_horizontal = ("today_spending",)
     fieldsets = (
         (
             "BudgetPlan",
@@ -24,8 +24,8 @@ class BudgetPlanAdmin(admin.ModelAdmin):
                     "monthly_income",
                     "monthly_plan",
                     "monthly_saving",
-                    "daily_spending",
-                    "daily_plan",
+                    "today_spending",
+                    "today_plan",
                 )
             },
         ),
